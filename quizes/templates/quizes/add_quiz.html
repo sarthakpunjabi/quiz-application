@@ -10,31 +10,29 @@ add_quiz
 {% endblock title %}
 
 {% block content %}
-<form action="" method="post">
+<form action="" method="post" id="addForm">
 {% csrf_token %}
 
 <label for="num_of_question" class="form-label">Number of Questions</label>
-<input type="number" name="num_of_question" class="form-control">
+<input type="number" name="num_of_question" class="form-control" id="num_of_question">
 <label for="difficulty" class="form-label">Difficulty</label>
 <select name="difficulty" id="difficult" class="form-control">
-    <option value="Easy">Easy</option>
-    <option value="Medium">Medium</option>
-    <option value="Difficult">Difficult</option>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="difficult">Difficult</option>
 </select>
 <label for="choices" class="form-label">Choices</label>
 <div class="dropdown" class="form-select ">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-        Dropdown button
-    </button>
-    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-        <li><a class="dropdown-item active" href="#">Select Category</a></li>
-        {% for subject in choices %}
-            <li><a class="dropdown-item" href="#" name="{{subject}}" data-value="{{subject}}">{{subject}}</a></li>
+    <select name="cho" id="cho" class="form-control">
+        {% for key,value in choices.items %}
+            <option value="{{key}}" name="{{key}}">{{value}}</option>    
         {% endfor %}
-    </ul>
+    </select>
+
   </div>
 
-<input type="submit" name="submit" value="submit" class="btn btn-success" style="margin-top: 30px; width: 100%;">
+<input type="submit" name="submit" id="submit" value="submit" class="btn btn-success" style="margin-top: 30px; width: 100%;">
 </form>
+<div id="que-ans"></div>
 
 {% endblock content %}
