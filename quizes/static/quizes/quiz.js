@@ -5,8 +5,6 @@ const scoreBox = document.getElementById('score-box')
 const resultBox = document.getElementById('result-box')
 const timerBox = document.getElementById('timer-box')
 
-
-
 const activateTimer = (time) => {
     if (time.toString().length < 2) {
         timerBox.innerHTML = `<b>0${time}:00</b>`
@@ -37,12 +35,14 @@ const activateTimer = (time) => {
         }
         if (minutes === 0 && seconds === 0) {
             timerBox.innerHTML = "<b>00:00</b>"
+
             
             setTimeout(()=>{
                 clearInterval(timer)
                 alert('Time over')
                 sendData()
-            }, 500)
+            },500)
+            
         }
 
         timerBox.innerHTML = `<b>${displayMinutes}:${displaySeconds}</b>`
@@ -151,5 +151,6 @@ const sendData = () =>{
 
 quizForm.addEventListener('submit',e=>{
     e.preventDefault()
+    activateTimer(0).stopTimer()
     sendData()
 })

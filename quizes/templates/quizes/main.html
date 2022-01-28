@@ -52,6 +52,8 @@ home
 
   {% endfor%}
 
-
+{% if user.is_superuser %}
+<a href="{% url 'quizes:add-quiz' %}" class="btn btn-primary">Add quiz</a>
+{% endif %}
 
 {% endblock content %}
