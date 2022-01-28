@@ -1,22 +1,49 @@
-from django.shortcuts import render
+from xmlrpc.client import boolean
+from django.shortcuts import render,HttpResponse
+from django.contrib.auth.decorators import login_required
 from .models import Quiz
 from django.views.generic import ListView
 from django.http import JsonResponse
 from questions.models import Answer, Question
 from results.models import Result
+import requests
+
 # Create your views here.
+
+parameters = {
+    "amount":10,
+    "type":"boolean"
+}
+
+default_categories = ["General Knowledge",
+"Books","Film","Music","Musicals & Theatres",
+"Television","Video Games","Board Games",
+"Science & Nature","Science Computers",
+"Science Mathematics","Mythology","Sports",
+"Geograpy","History","Politics",
+"Art","Celebrities","Animals",
+"Vehicles","Comics","Gadgets",
+"Japanese","Cartoon & Animations"
+]
 
 class QuizListView(ListView):
     model = Quiz
     template_name = 'quizes/main.html'
 
+
+def add_quiz(request):
+    
+    # data = requests.get("https://opentdb.com/api.php",params=parameters).json()["results"]
+    return render(request,"quizes/add_quiz.html",context={"choices":default_categories})
+
+@login_required
 def quiz_view(request,pk):
     quiz = Quiz.objects.get(pk=pk)
     return render(request,'quizes/quiz.html',{'obj':quiz})
 
+@login_required
 def quiz_data_view(request,pk):
     quiz = Quiz.objects.get(pk=pk)
-    print(quiz)
     questions = []
     for q in quiz.get_question():
         answers = []
@@ -24,12 +51,12 @@ def quiz_data_view(request,pk):
             answers.append(a.text)
         questions.append({str(q):answers})
     
-    print(questions)
     return JsonResponse({
         'data':questions,
         'time':quiz.time,
     })
 
+@login_required
 def save_quiz_view(request,pk):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         questions = []
@@ -53,17 +80,17 @@ def save_quiz_view(request,pk):
 
             if a_selected != "":
                 question_answer = Answer.objects.filter(question=q)
-                print('question-answer ',question_answer)
+                
                 for a in question_answer:
                     if a_selected == a.text:
-                        print('a.correct',a.correct)
+                        
                         if a.correct:
                             score +=1
                             correct_answer = a.text
                     else:
                         if a.correct:
                             correct_answer = a.text
-                print('result q',str(q))
+                
                 results.append({str(q):{'correct_answer':correct_answer,'answered':a_selected}})
             else:
                 results.append({str(q):'not answered'})
