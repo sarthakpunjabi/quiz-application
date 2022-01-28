@@ -151,6 +151,5 @@ const sendData = () =>{
 
 quizForm.addEventListener('submit',e=>{
     e.preventDefault()
-    activateTimer(0).stopTimer()
     sendData()
 })
