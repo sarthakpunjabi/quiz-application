@@ -1,5 +1,4 @@
-from xmlrpc.client import boolean
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Quiz
 from django.views.generic import ListView
@@ -10,12 +9,9 @@ import requests
 
 # Create your views here.
 
-parameters = {
-    "amount":10,
-    "type":"boolean"
-}
+default_categories = {}
 
-default_categories = ["General Knowledge",
+temp_categories = ["General Knowledge",
 "Books","Film","Music","Musicals & Theatres",
 "Television","Video Games","Board Games",
 "Science & Nature","Science Computers",
@@ -26,15 +22,32 @@ default_categories = ["General Knowledge",
 "Japanese","Cartoon & Animations"
 ]
 
+for index,value in enumerate(temp_categories):
+    default_categories[index+9]=value
+
+
 class QuizListView(ListView):
     model = Quiz
     template_name = 'quizes/main.html'
 
 
 def add_quiz(request):
-    
-    # data = requests.get("https://opentdb.com/api.php",params=parameters).json()["results"]
-    return render(request,"quizes/add_quiz.html",context={"choices":default_categories})
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        print("hi")
+        temp = request.POST
+        parameters = {
+            "amount":int(temp['amount']),
+            "category":int(temp['choice']),
+            "difficulty":temp['difficulty'],
+            "type":temp['type']
+        }
+        data = requests.get("https://opentdb.com/api.php",params=parameters).json()["results"]
+        print(data)
+        return JsonResponse({
+            'data':data,
+        })
+    else:    
+        return render(request,"quizes/add_quiz.html",context={"choices":default_categories})
 
 @login_required
 def quiz_view(request,pk):
@@ -63,6 +76,7 @@ def save_quiz_view(request,pk):
         data = request.POST
         data_ = dict(data.lists())
         data_.pop('csrfmiddlewaretoken')
+        print(data_)
 
         for k in data_.keys():
             question = Question.objects.get(text=k)
