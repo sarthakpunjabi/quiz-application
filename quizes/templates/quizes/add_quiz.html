@@ -35,4 +35,12 @@ add_quiz
 </form>
 <div id="que-ans"></div>
 
+<form id="quiz-form" class="mt-3 mb-3" class="not-visible">
+    {% csrf_token %}
+    
+    <div id="quiz-box"></div>
+    <button type="submit" class="btn btn-primary mt-3 not-visible">save</button>
+
+</form>
+
 {% endblock content %}
