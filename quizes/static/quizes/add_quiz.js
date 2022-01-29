@@ -15,9 +15,7 @@ data['csrfmiddlewaretoken'] = csrf[0].value
 data['amount'] = amount.value
 data['difficulty'] = difficulty.value
 data['choice'] = choice.value
-console.log(data['choice'])
 data['type'] = "multiple"
-console.log(data)
 
 $.ajax({
     type:'POST',
@@ -25,8 +23,15 @@ $.ajax({
     data:data,
     success:function(response){
         addForm.classList.add('not-visible')
-        const result = response.data
-        console.log(result)
+        const data = response.data
+        data.forEach(el => {
+            for (const [question,incorrect_answers,correct_answer] of Object.entries(el)){
+                console.log(question)
+                console.log(incorrect_answers)
+                console.log(correct_answer)
+            }
+        });
+        
     },
     error:function(response){
         console.log(response)
