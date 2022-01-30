@@ -10,6 +10,7 @@ add_quiz
 {% endblock title %}
 
 {% block content %}
+
 <form action="" method="post" id="addForm">
 {% csrf_token %}
 
@@ -30,7 +31,7 @@ add_quiz
     </select>
 
   </div>
-
+  <button type="button" class="btn btn-lg btn-danger" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>
 <input type="submit" name="submit" id="submit" value="submit" class="btn btn-success" style="margin-top: 30px; width: 100%;">
 </form>
 <div id="que-ans"></div>
@@ -39,8 +40,16 @@ add_quiz
     {% csrf_token %}
     
     <div id="quiz-box"></div>
+    
     <button type="submit" class="btn btn-primary mt-3 not-visible">save</button>
 
 </form>
+<script>
+console.log("popover")
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl)
+})
+</script>
 
 {% endblock content %}
