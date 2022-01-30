@@ -8,6 +8,8 @@ const quiForm = document.getElementById('quiz-form')
 
 
 
+
+
 const sendData = () => {
 const url = window.location.href
 const amount = document.getElementById('num_of_question')
