@@ -2,7 +2,8 @@ console.log("Add_quiz")
 
 const addForm = document.getElementById('addForm')
 const submit = document.querySelector('#submit')
-const question_answer = document.getElementById('que-ans')
+const modalBtn = document.getElementById('modbtn')
+const saveBtn = document.getElementById('savebtn')
 const quizBox = document.getElementById('quiz-box')
 const quiForm = document.getElementById('quiz-form')
 
@@ -30,8 +31,15 @@ $.ajax({
     success:function(response){
         addForm.classList.add('not-visible')
         quiForm.classList.remove('not-visible')
+        modalBtn.classList.remove('not-visible')
+        saveBtn.classList.remove('not-visible')
         
         const data = response.data
+        quizBox.innerHTML += `
+        <div class="mb-2">
+            <b><h1>${data[1].category}</h1></b>
+        </div>
+        `
         console.log(data)
         data.forEach(el => {
                 quizBox.innerHTML += `
@@ -60,6 +68,7 @@ $.ajax({
                 `
             
         })
+
     },
 
     error:function(response){

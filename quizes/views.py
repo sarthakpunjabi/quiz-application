@@ -33,7 +33,6 @@ class QuizListView(ListView):
 
 def add_quiz(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        print("hi")
         temp = request.POST
         parameters = {
             "amount":int(temp['amount']),
@@ -42,7 +41,7 @@ def add_quiz(request):
             "type":temp['type']
         }
         data = requests.get("https://opentdb.com/api.php",params=parameters).json()["results"]
-        print(data)
+        
         return JsonResponse({
             'data':data,
         })
