@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Quiz
@@ -47,6 +48,9 @@ def add_quiz(request):
         })
     else:    
         return render(request,"quizes/add_quiz.html",context={"choices":default_categories})
+
+def add_save(request):
+    return HTTPResponse("Reached")
 
 @login_required
 def quiz_view(request,pk):
