@@ -3,6 +3,7 @@ console.log("Add_quiz")
 const addForm = document.getElementById('addForm')
 const submit = document.querySelector('#submit')
 const modalBtn = document.getElementById('modbtn')
+const url = window.location.href
 const saveBtn = document.getElementById('savebtn')
 const quizBox = document.getElementById('quiz-box')
 const quiForm = document.getElementById('quiz-form')
@@ -11,7 +12,9 @@ const modalForm = document.getElementById('modal-form')
 const question = document.getElementById('addquestion')
 const incorrect = [...document.getElementsByClassName('op')]
 const correct = document.getElementById('op4')
+const goibibo = [...document.getElementsByClassName('goibibo')]
 let maindata
+
 
 
 const showData = (data) => {
@@ -54,7 +57,7 @@ const showData = (data) => {
 
 
 const sendData = () => {
-const url = window.location.href
+
 const amount = document.getElementById('num_of_question')
 const difficulty = document.querySelector('#difficult')
 const choice = document.querySelector('#cho')
@@ -75,6 +78,11 @@ $.ajax({
         quiForm.classList.remove('not-visible')
         modalBtn.classList.remove('not-visible')
         saveBtn.classList.remove('not-visible')
+        goibibo.forEach(goib=>{
+            goib.classList.remove('not-visible')
+            
+        })
+        
         
         const data = response.data
         maindata = data
@@ -108,7 +116,18 @@ saveModalBtn.addEventListener('click',e=>{
     question.value=""
     correct.value=""
     maindata.push(obj)
-    showData(maindata)
     
+})
+
+saveBtn.addEventListener('click',e=>{
+    e.preventDefault()
+    const goinp = [...document.getElementsByClassName('goinp')]
+    console.log(goinp)
+    metaData = {}
     
+    $.ajax({
+        type:'POST',
+        url:`${url}save`,
+        data:{'data':maindata}
+    })
 })
