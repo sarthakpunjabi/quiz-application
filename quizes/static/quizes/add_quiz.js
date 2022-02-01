@@ -6,36 +6,17 @@ const modalBtn = document.getElementById('modbtn')
 const saveBtn = document.getElementById('savebtn')
 const quizBox = document.getElementById('quiz-box')
 const quiForm = document.getElementById('quiz-form')
+const saveModalBtn = document.getElementById('save-modal-form')
+const modalForm = document.getElementById('modal-form')
+const question = document.getElementById('addquestion')
+const incorrect = [...document.getElementsByClassName('op')]
+const correct = document.getElementById('op4')
+let maindata
 
 
-
-
-
-const sendData = () => {
-const url = window.location.href
-const amount = document.getElementById('num_of_question')
-const difficulty = document.querySelector('#difficult')
-const choice = document.querySelector('#cho')
-const data = {}
-const csrf = document.getElementsByName('csrfmiddlewaretoken')
-data['csrfmiddlewaretoken'] = csrf[0].value
-data['amount'] = amount.value
-data['difficulty'] = difficulty.value
-data['choice'] = choice.value
-data['type'] = "multiple"
-
-$.ajax({
-    type:'POST',
-    url:`${url}`,
-    data:data,
-    success:function(response){
-        addForm.classList.add('not-visible')
-        quiForm.classList.remove('not-visible')
-        modalBtn.classList.remove('not-visible')
-        saveBtn.classList.remove('not-visible')
-        
-        const data = response.data
-        quizBox.innerHTML += `
+const showData = (data) => {
+    quizBox.innerHTML = ""
+    quizBox.innerHTML += `
         <div class="mb-2">
             <b><h1>${data[1].category}</h1></b>
         </div>
@@ -68,7 +49,37 @@ $.ajax({
                 `
             
         })
+}
 
+
+
+const sendData = () => {
+const url = window.location.href
+const amount = document.getElementById('num_of_question')
+const difficulty = document.querySelector('#difficult')
+const choice = document.querySelector('#cho')
+const data = {}
+const csrf = document.getElementsByName('csrfmiddlewaretoken')
+data['csrfmiddlewaretoken'] = csrf[0].value
+data['amount'] = amount.value
+data['difficulty'] = difficulty.value
+data['choice'] = choice.value
+data['type'] = "multiple"
+
+$.ajax({
+    type:'POST',
+    url:`${url}`,
+    data:data,
+    success:function(response){
+        addForm.classList.add('not-visible')
+        quiForm.classList.remove('not-visible')
+        modalBtn.classList.remove('not-visible')
+        saveBtn.classList.remove('not-visible')
+        
+        const data = response.data
+        maindata = data
+        showData(data)
+        
     },
 
     error:function(response){
@@ -82,5 +93,22 @@ $.ajax({
 addForm.addEventListener('submit',e=>{
     e.preventDefault()
     sendData()
+    
+})
+
+saveModalBtn.addEventListener('click',e=>{
+    e.preventDefault()
+    incans = []
+    incorrect.forEach(inc =>{
+        incans.push(inc.value)
+        inc.value=""
+    })
+    obj = {"question":question.value,"correct_answer":correct.value,"incorrect_answers":incans}
+    incans=[]
+    question.value=""
+    correct.value=""
+    maindata.push(obj)
+    showData(maindata)
+    
     
 })
