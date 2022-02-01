@@ -36,8 +36,24 @@ add_quiz
 </form>
 <div id="que-ans"></div>
 
-<form id="quiz-form" class="mt-3 mb-3" class="not-visible">
+<form id="quiz-form" action="" class="mt-3 mb-3" class="not-visible">
     {% csrf_token %}
+    <label for="nameofquiz" required class="goibibo not-visible form-label">Name of the quiz</label>
+    <input type="text" name="nameofquiz" required class="goinp goibibo not-visible form-control">
+    <label for="topic" required class="goibibo not-visible form-label">Topic</label>
+    <input type="text" name="topic" required class=" goinp goibibo not-visible form-control">
+    <label for="numberofquestion" required class="goibibo not-visible form-label">Number of question</label>
+    <input type="text" required class="goinp goibibo not-visible form-control" name="numberofquestion">
+    <label for="time" required class="goibibo not-visible form-label">Time</label>
+    <input type="text" required class=" goinp goibibo not-visible form-control" name="time">
+    <label for="reqscoretopass" required class="goibibo not-visible form-label">Required score to pass</label>
+    <input type="text" required class=" goinp goibibo not-visible form-control" name="reqscoretopass">
+    <label for="difficulty" required class="goibibo not-visible form-label">Difficulty</label>
+    <select name="difficulty" required class="goinp goibibo not-visible form-control" id="">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="difficult">Difficult</option>
+    </select>
 
 
     <!-- Modal -->
@@ -49,7 +65,7 @@ add_quiz
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post" id="modal-form">
+                    <form method="post" id="modal-form">
                         <label for="addquestion">Add Question</label>
                         <input type="text" id="addquestion">
                         <br><br>
@@ -77,7 +93,7 @@ add_quiz
     <br>
 
     <br>
-    <button type="submit" class="btn btn-primary mt-3 not-visible" id="savebtn">save</button>
+    <input type="submit"  value="save" class="btn form-label btn-primary mt-3 goibibo not-visible" id="savebtn"></input>
 
 </form>
 
