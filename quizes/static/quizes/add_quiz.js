@@ -122,21 +122,25 @@ saveModalBtn.addEventListener('click',e=>{
 saveBtn.addEventListener('click',e=>{
     e.preventDefault()
     const goinp = [...document.getElementsByClassName('goinp')]
-    const csrf = document.getElementsByName('csrfmiddlewaretoken')
-    data['csrfmiddlewaretoken'] = csrf[0].value
+    const csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value
+    // maindata["csrfmiddlewaretoken"] = csrftoken
+    console.log(maindata)
     metaData = {}
     
     goinp.forEach(going =>{
         metaData[going.getAttribute('name')] = going.value
     })
-    console.log(metaData)
+    
+    console.log(maindata)
 
     $.ajax({
         type:'POST',
         url:`${url}save`,
-        data:{'data':maindata,'meta':metaData},
+        headers: { "X-CSRFToken": csrftoken },
+        data:{"data":maindata,"meta":metaData},
         success:function(response){
             console.log("Submitted")
+            console.log(response)
         },
         error:function(response){
             console.log(response)
