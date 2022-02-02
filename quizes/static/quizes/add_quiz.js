@@ -15,8 +15,6 @@ const correct = document.getElementById('op4')
 const goibibo = [...document.getElementsByClassName('goibibo')]
 let maindata
 
-
-
 const showData = (data) => {
     quizBox.innerHTML = ""
     quizBox.innerHTML += `
@@ -53,8 +51,6 @@ const showData = (data) => {
             
         })
 }
-
-
 
 const sendData = () => {
 
@@ -116,6 +112,7 @@ saveModalBtn.addEventListener('click',e=>{
     question.value=""
     correct.value=""
     maindata.push(obj)
+    showData(maindata)
     
 })
 
@@ -123,16 +120,10 @@ saveBtn.addEventListener('click',e=>{
     e.preventDefault()
     const goinp = [...document.getElementsByClassName('goinp')]
     const csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value
-    // maindata["csrfmiddlewaretoken"] = csrftoken
-    console.log(maindata)
     metaData = {}
-    
     goinp.forEach(going =>{
         metaData[going.getAttribute('name')] = going.value
     })
-    
-    console.log(maindata)
-
     $.ajax({
         type:'POST',
         url:`${url}save`,

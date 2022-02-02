@@ -48,9 +48,14 @@ def add_quiz(request):
     else:    
         return render(request,"quizes/add_quiz.html",context={"choices":default_categories})
 
+@login_required
 def add_save(request):
     print("reached")
-    print(request.POST)
+    
+    data = request.POST
+    data_ = dict(data.lists())
+    print(data_)
+    
     
 
 @login_required
