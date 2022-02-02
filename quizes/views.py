@@ -42,7 +42,6 @@ def add_quiz(request):
             "type":temp['type']
         }
         data = requests.get("https://opentdb.com/api.php",params=parameters).json()["results"]
-        
         return JsonResponse({
             'data':data,
         })
