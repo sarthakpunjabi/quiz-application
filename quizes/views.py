@@ -1,4 +1,3 @@
-from http.client import HTTPResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Quiz
@@ -6,6 +5,7 @@ from django.views.generic import ListView
 from django.http import JsonResponse
 from questions.models import Answer, Question
 from results.models import Result
+from django.shortcuts import redirect
 import requests
 
 # Create your views here.
@@ -55,7 +55,7 @@ def add_save(request):
     data = request.POST
     data_ = dict(data.lists())
     print(data_)
-    
+    return redirect("/")
     
 
 @login_required
