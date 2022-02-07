@@ -130,8 +130,8 @@ saveBtn.addEventListener('click',e=>{
         headers: { "X-CSRFToken": csrftoken },
         data:{"data":maindata,"meta":metaData},
         success:function(response){
-            console.log("Submitted")
             console.log(response)
+            window.location = "/"
         },
         error:function(response){
             console.log(response)
