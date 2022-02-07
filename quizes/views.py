@@ -53,10 +53,6 @@ def add_save(request):
     print("reached")
     data = request.POST
     data_ = dict(data.lists())
-    print(data_)
-    print(data_.get("meta[nameofquiz]")[0])
-    for k,v in data_.items():
-        print(k,v)
     #creation of quiz
     try:
         access = Quiz.objects.get(name=f"{data_.get('meta[nameofquiz]')[0]}")
@@ -71,22 +67,21 @@ def add_save(request):
             difficulty = f"{data_.get('meta[difficulty]')[0]}",
         )
         if create:
-            print(Q[0].number_of_questions)
-            que = Question.objects.get_or_create(
-                text = f"{data_.get('data[0][question]')[0]}",
-                quiz_id = Q.id
-            )
-            ans = Answer.objects.get_or_create(
-                text = f"{data_.get('data[0][correct_answer]')[0]}",
-                correct = True,
-                question_id = que[0].id
-            )
-            ans1 = Answer.objects.get_or_create(text = f"{data_.get('data[0][incorrect_answers][]')[0]}",correct=False,question_id=f"{que[0].id}"),
-            ans2 = Answer.objects.get_or_create(text = f"{data_.get('data[0][incorrect_answers][]')[1]}",correct=False,question_id=f"{que[0].id}"),
-            ans3 = Answer.objects.get_or_create(text = f"{data_.get('data[0][incorrect_answers][]')[2]}",correct=False,question_id=f"{que[0].id}"),
-            print(ans1,ans2,ans3)
-            
-        print(Q)
+            print("number of question",Q.number_of_questions)
+            for i in range(int(Q.number_of_questions)):
+                que = Question.objects.get_or_create(
+                    text = f"{data_.get(f'data[{i}][question]')[0]}",
+                    quiz_id = Q.id
+                )
+                ans = Answer.objects.get_or_create(
+                    text = f"{data_.get(f'data[{i}][correct_answer]')[0]}",
+                    correct = True,
+                    question_id = que[0].id
+                )
+                ans1 = Answer.objects.get_or_create(text = f"{data_.get(f'data[{i}][incorrect_answers][]')[0]}",correct=False,question_id=f"{que[0].id}"),
+                ans2 = Answer.objects.get_or_create(text = f"{data_.get(f'data[{i}][incorrect_answers][]')[1]}",correct=False,question_id=f"{que[0].id}"),
+                ans3 = Answer.objects.get_or_create(text = f"{data_.get(f'data[{i}][incorrect_answers][]')[2]}",correct=False,question_id=f"{que[0].id}"),
+                print(ans1,ans2,ans3)
 
     print("now to redirect")
     return JsonResponse({"Objective":"Achieved"})
