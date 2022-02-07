@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Quiz
 from django.views.generic import ListView
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from questions.models import Answer, Question
 from results.models import Result
 from django.shortcuts import redirect
@@ -51,11 +51,45 @@ def add_quiz(request):
 @login_required
 def add_save(request):
     print("reached")
-    
     data = request.POST
     data_ = dict(data.lists())
     print(data_)
-    return redirect("/")
+    print(data_.get("meta[nameofquiz]")[0])
+    for k,v in data_.items():
+        print(k,v)
+    #creation of quiz
+    try:
+        access = Quiz.objects.get(name=f"{data_.get('meta[nameofquiz]')[0]}")
+        print('accessed')
+    except:
+        Q,create = Quiz.objects.get_or_create(
+            name=f"{data_.get('meta[nameofquiz]')[0]}",
+            topic = f"{data_.get('meta[topic]')[0]}",
+            number_of_questions = f"{data_.get('meta[numberofquestion]')[0]}",
+            time = f"{data_.get('meta[time]')[0]}",
+            required_score_to_pass = f"{data_.get('meta[reqscoretopass]')[0]}",
+            difficulty = f"{data_.get('meta[difficulty]')[0]}",
+        )
+        if create:
+            print(Q[0].number_of_questions)
+            que = Question.objects.get_or_create(
+                text = f"{data_.get('data[0][question]')[0]}",
+                quiz_id = Q.id
+            )
+            ans = Answer.objects.get_or_create(
+                text = f"{data_.get('data[0][correct_answer]')[0]}",
+                correct = True,
+                question_id = que[0].id
+            )
+            ans1 = Answer.objects.get_or_create(text = f"{data_.get('data[0][incorrect_answers][]')[0]}",correct=False,question_id=f"{que[0].id}"),
+            ans2 = Answer.objects.get_or_create(text = f"{data_.get('data[0][incorrect_answers][]')[1]}",correct=False,question_id=f"{que[0].id}"),
+            ans3 = Answer.objects.get_or_create(text = f"{data_.get('data[0][incorrect_answers][]')[2]}",correct=False,question_id=f"{que[0].id}"),
+            print(ans1,ans2,ans3)
+            
+        print(Q)
+
+    print("now to redirect")
+    return JsonResponse({"Objective":"Achieved"})
     
 
 @login_required
