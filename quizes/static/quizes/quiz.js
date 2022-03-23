@@ -87,6 +87,7 @@ const quizForm = document.getElementById('quiz-form')
 const csrf = document.getElementsByName('csrfmiddlewaretoken')
 
 const sendData = () =>{
+    console.log("Sending the data ")
     
     const data = {}
     const elements = [...document.getElementsByClassName('ans')]
