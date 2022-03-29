@@ -134,15 +134,13 @@ USE_TZ = True
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
-
+LOGOUT_REDIRECT_URL = '/'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
             'profile',
             'email',
-            'password',
-            
             
         ],
         'AUTH_PARAMS': {

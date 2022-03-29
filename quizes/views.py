@@ -7,6 +7,7 @@ from questions.models import Answer, Question
 from results.models import Result
 from django.shortcuts import redirect
 import requests
+import html
 
 # Create your views here.
 
@@ -50,13 +51,13 @@ def add_quiz(request):
 
 @login_required
 def add_save(request):
-    print("reached")
+    
     data = request.POST
     data_ = dict(data.lists())
     #creation of quiz
     try:
         access = Quiz.objects.get(name=f"{data_.get('meta[nameofquiz]')[0]}")
-        print('accessed')
+        
     except:
         Q,create = Quiz.objects.get_or_create(
             name=f"{data_.get('meta[nameofquiz]')[0]}",
@@ -67,23 +68,25 @@ def add_save(request):
             difficulty = f"{data_.get('meta[difficulty]')[0]}",
         )
         if create:
-            print("number of question",Q.number_of_questions)
+            
             for i in range(int(Q.number_of_questions)):
+                print(html.unescape(f"{data_.get(f'data[{i}][question]')[0]}"))
                 que = Question.objects.get_or_create(
-                    text = f"{data_.get(f'data[{i}][question]')[0]}",
+                    text = html.unescape(f"{data_.get(f'data[{i}][question]')[0]}"),
                     quiz_id = Q.id
                 )
+                print(html.unescape(f"{data_.get(f'data[{i}][correct_answer]')[0]}"))
                 ans = Answer.objects.get_or_create(
-                    text = f"{data_.get(f'data[{i}][correct_answer]')[0]}",
+                    text = html.unescape(f"{data_.get(f'data[{i}][correct_answer]')[0]}"),
                     correct = True,
                     question_id = que[0].id
                 )
-                ans1 = Answer.objects.get_or_create(text = f"{data_.get(f'data[{i}][incorrect_answers][]')[0]}",correct=False,question_id=f"{que[0].id}"),
-                ans2 = Answer.objects.get_or_create(text = f"{data_.get(f'data[{i}][incorrect_answers][]')[1]}",correct=False,question_id=f"{que[0].id}"),
-                ans3 = Answer.objects.get_or_create(text = f"{data_.get(f'data[{i}][incorrect_answers][]')[2]}",correct=False,question_id=f"{que[0].id}"),
-                print(ans1,ans2,ans3)
+                ans1 = Answer.objects.get_or_create(text = html.unescape(f"{data_.get(f'data[{i}][incorrect_answers][]')[0]}"),correct=False,question_id=f"{que[0].id}"),
+                ans2 = Answer.objects.get_or_create(text = html.unescape(f"{data_.get(f'data[{i}][incorrect_answers][]')[1]}"),correct=False,question_id=f"{que[0].id}"),
+                ans3 = Answer.objects.get_or_create(text = html.unescape(f"{data_.get(f'data[{i}][incorrect_answers][]')[2]}"),correct=False,question_id=f"{que[0].id}"),
+                
 
-    print("now to redirect")
+    
     return JsonResponse({"Objective":"Achieved"})
     
 
@@ -118,6 +121,7 @@ def save_quiz_view(request,pk):
 
         for k in data_.keys():
             question = Question.objects.get(text=k)
+            print(question)
             questions.append(question)
 
         user = request.user
@@ -129,7 +133,7 @@ def save_quiz_view(request,pk):
 
         for q in questions:
             a_selected = request.POST.get(q.text)
-
+            print('a_select',a_selected)
             if a_selected != "":
                 question_answer = Answer.objects.filter(question=q)
                 
@@ -153,5 +157,4 @@ def save_quiz_view(request,pk):
             return JsonResponse({'passed':True,'score':score_,'results':results})
         else:
             return JsonResponse({'passed':False,'score':score_,'results':results})
-
     

@@ -107,7 +107,7 @@ const sendData = () =>{
         url:`${url}save`,
         data:data,
         success:function(response){
-            
+            console.log("Operating the success function ")
             const result = response.results
             console.log(response.passed)
             quizForm.classList.add('not-visible')
@@ -152,5 +152,6 @@ const sendData = () =>{
 
 quizForm.addEventListener('submit',e=>{
     e.preventDefault()
+    console.log("about to send data")
     sendData()
 })
