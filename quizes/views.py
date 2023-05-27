@@ -71,12 +71,12 @@ def add_save(request):
         if create:
             
             for i in range(int(Q.number_of_questions)):
-                print(html.unescape(f"{data_.get(f'data[{i}][question]')[0]}"))
+                
                 que = Question.objects.get_or_create(
                     text = html.unescape(f"{data_.get(f'data[{i}][question]')[0]}"),
                     quiz_id = Q.id
                 )
-                print(html.unescape(f"{data_.get(f'data[{i}][correct_answer]')[0]}"))
+                
                 ans = Answer.objects.get_or_create(
                     text = html.unescape(f"{data_.get(f'data[{i}][correct_answer]')[0]}"),
                     correct = True,
@@ -117,29 +117,25 @@ def save_quiz_view(request,pk):
         questions = []
         data = request.POST
         data_ = dict(data.lists())
-        print(data_)
+        
         
         data_.pop('csrfmiddlewaretoken')
-        print(data_)
         
-
         for k in data_.keys():
-            print(k)
             question = Question.objects.get(text=k)
-            print(question)
             questions.append(question)
         
-        print("I am here")
+        
         user = request.user
         quiz = Quiz.objects.get(pk=pk)
         score = 0
         multiplier = 100 / quiz.number_of_questions
         results = []
         correct_answer = None
-        print("I am here")
+        
         for q in questions:
             a_selected = request.POST.get(q.text)
-            print('a_select',a_selected)
+            
             if a_selected != "":
                 question_answer = Answer.objects.filter(question=q)
                 

@@ -23,6 +23,5 @@ class Quiz(models.Model):
 
     def get_question(self):
         que = list(self.question_set.all())
-        print(que)
         random.shuffle(que)
         return que[:self.number_of_questions] 

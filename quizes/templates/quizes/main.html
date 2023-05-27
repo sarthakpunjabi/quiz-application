@@ -9,6 +9,38 @@
 home
 {% endblock title %}
 
+{% block styles %}
+<style>
+  /* Parallax Scrolling */
+  .parallax-section {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 400px; /* Adjust the height as needed */
+  }
+
+  /* Card Animation on Hover */
+  .card {
+    transition: transform 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-10px); /* Adjust the vertical translation as needed */
+  }
+
+  /* Loading Animation */
+  .loading-spinner {
+    display: none; /* Hide the spinner by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+</style>
+{% endblock styles %}
+
 {% block content %}
 
   <!-- Modal -->
@@ -30,30 +62,48 @@ home
     </div>
   </div>
 
-  <div class="h1">
-      Quiz List
+  <div class="container mt-3">
+    <h1 class="text-center">Quiz List</h1>
+    <hr>
+    <div class="row">
+      {% for obj in object_list %}
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">{{ obj.name }}</h5>
+              <p class="card-text">
+                Number of Questions: {{ obj.number_of_questions }}<br>
+                Difficulty: {{ obj.difficulty }}<br>
+                Time: {{ obj.time }} minutes<br>
+                Pass Score: {{ obj.required_score_to_pass }}%
+              </p>
+              <button class="btn btn-primary modal-button"
+                data-pk="{{ obj.pk }}"
+                data-quiz="{{ obj.name }}"
+                data-questions="{{ obj.number_of_questions }}"
+                data-difficulty="{{ obj.difficulty }}"
+                data-time="{{ obj.time }}"
+                data-pass="{{ obj.required_score_to_pass }}"
+                data-bs-toggle="modal"
+                data-bs-target="#quizstartmodal"
+              >
+                Start Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
-  <hr>
-  {% for obj in object_list %}
 
-    <button
-      class="btn btn-link modal-button"
-      data-pk = "{{obj.pk}}"
-      data-quiz = "{{obj.name}}"
-      data-questions = "{{obj.number_of_questions}}"
-      data-difficulty = "{{obj.difficulty}}"
-      data-time = "{{obj.time}}"
-      data-pass = "{{obj.required_score_to_pass}}"
-      data-bs-toggle="modal"
-      data-bs-target="#quizstartmodal"
-    >
-    {{obj.name}}
-    </button><br>
+  <div class="loading-spinner">
+    <!-- Add your loading animation here -->
+  </div>
 
-  {% endfor%}
-
-{% if user.is_superuser %}
-<a href="{% url 'quizes:add-quiz' %}" class="btn btn-primary">Add quiz</a>
-{% endif %}
+  {% if user.is_superuser %}
+    <div class="text-center">
+      <a href="{% url 'quizes:add-quiz' %}" class="btn btn-primary">Add Quiz</a>
+    </div>
+  {% endif %}
 
 {% endblock content %}

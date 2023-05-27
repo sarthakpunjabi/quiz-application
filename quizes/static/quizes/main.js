@@ -8,8 +8,28 @@ const startBtn = document.getElementById('start-button')
 
 const url = window.location.href
 
+$(document).ready(function () {
+    $('a[href^="#"]').on('click', function (event) {
+        event.preventDefault();
+        var target = $(this.getAttribute('href'));
+        if (target.length) {
+            $('html, body').stop().animate({
+                scrollTop: target.offset().top
+            }, 800); // Adjust the scroll speed as needed
+        }
+    });
+});
 
-modalBtns.forEach(modalBtn => modalBtn.addEventListener('click',()=>{
+// Loading Animation
+$(window).on('load', function () {
+    $('.loading-spinner').fadeOut('slow', function () {
+        $(this).remove();
+    });
+});
+
+
+
+modalBtns.forEach(modalBtn => modalBtn.addEventListener('click', () => {
     const pk = modalBtn.getAttribute('data-pk')
     const name = modalBtn.getAttribute('data-quiz')
     const numQuestion = modalBtn.getAttribute('data-questions')
@@ -28,7 +48,7 @@ modalBtns.forEach(modalBtn => modalBtn.addEventListener('click',()=>{
             </ul>
         </div>
     `
-    startBtn.addEventListener('click',()=>{
+    startBtn.addEventListener('click', () => {
         window.location.href = url + pk
     })
 }))
