@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Quiz
 from django.views.generic import ListView
 from django.http import JsonResponse,HttpResponse
+from django.shortcuts import get_list_or_404, get_object_or_404
 from questions.models import Answer, Question
 from results.models import Result
 from django.shortcuts import redirect
@@ -116,21 +117,26 @@ def save_quiz_view(request,pk):
         questions = []
         data = request.POST
         data_ = dict(data.lists())
+        print(data_)
+        
         data_.pop('csrfmiddlewaretoken')
         print(data_)
+        
 
         for k in data_.keys():
+            print(k)
             question = Question.objects.get(text=k)
             print(question)
             questions.append(question)
-
+        
+        print("I am here")
         user = request.user
         quiz = Quiz.objects.get(pk=pk)
         score = 0
         multiplier = 100 / quiz.number_of_questions
         results = []
         correct_answer = None
-
+        print("I am here")
         for q in questions:
             a_selected = request.POST.get(q.text)
             print('a_select',a_selected)
